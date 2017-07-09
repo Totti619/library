@@ -1,4 +1,4 @@
-package library;
+package library.users;
 
 public class User {
 	private String id, name, surname, idCard, telephone, email, address, login, password;
@@ -35,10 +35,4 @@ public class User {
 	private void setLogin(String login) {this.login = login;}
 	private String getPassword() {return password;}
 	private void setPassword(String password) {this.password = password;}
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-
 }
