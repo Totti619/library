@@ -7,9 +7,10 @@ import java.util.List;
 
 import library.data.Country;
 import library.data.Subject;
-import library.main.Library;
 
 public class Element implements Comparable<Element>, Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private String title;
 	private short year;
@@ -32,25 +33,25 @@ public class Element implements Comparable<Element>, Serializable {
 	public int getId() {
 		return id;
 	}
-	private void setId(int id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getTitle() {
 		return title;
 	}
-	private void setTitle(String title) {
+	public void setTitle(String title) {
 		this.title = title;
 	}
 	public short getYear() {
 		return year;
 	}
-	private void setYear(short year) {
+	public void setYear(short year) {
 		this.year = year;
 	}
 	public List<Subject> getSubjects() {
 		return new ArrayList<Subject>(subjects);
 	}
-	private void setSubjects(ArrayList<Subject> subjects) {
+	public void setSubjects(ArrayList<Subject> subjects) {
 		this.subjects = new ArrayList<Subject>(subjects);
 	}
 	public int getStock() {

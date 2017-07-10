@@ -9,6 +9,8 @@ import library.data.Person;
 import library.data.Subject;
 
 public class Movie extends Element {
+
+	private static final long serialVersionUID = 1L;
 	private Person director;
 	private List<Person> producers;
 	private List<Person> scriptwriters;

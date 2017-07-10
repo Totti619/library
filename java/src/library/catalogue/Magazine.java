@@ -9,6 +9,7 @@ import library.data.Subject;
 
 public class Magazine extends Element {
 	
+	private static final long serialVersionUID = 1L;
 	private String isbn;
 	private Person author;
 	private Company publishingCompany;

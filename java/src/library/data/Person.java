@@ -3,6 +3,8 @@ package library.data;
 import java.io.Serializable;
 
 public class Person implements Comparable<Person>, Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private String name, surnames;
 	

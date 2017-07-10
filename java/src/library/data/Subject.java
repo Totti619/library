@@ -1,6 +1,10 @@
 package library.data;
 
-public class Subject implements Comparable<Subject> {
+import java.io.Serializable;
+
+public class Subject implements Comparable<Subject>, Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private String name;
 	

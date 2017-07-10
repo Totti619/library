@@ -3,6 +3,8 @@ package library.data;
 import java.io.Serializable;
 
 public class Country implements Comparable<Company>, Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private String name;
 	
