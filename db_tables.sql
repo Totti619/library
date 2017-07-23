@@ -1,25 +1,26 @@
+drop database library;
 create database library;
 use library;
 
 create table country (
-	id int unsigned primary key not null,
+	id int unsigned primary key not null auto_increment,
     name varchar(50) not null
 );
 create table person (
-	id int unsigned primary key not null,
+	id int unsigned primary key not null auto_increment,
     name varchar(50) not null,
     surnames varchar(50) not null
 );
 create table subject (
-	id int unsigned primary key not null,
+	id int unsigned primary key not null auto_increment,
     name varchar(50) not null
 );
 create table industry (
-	id int unsigned primary key not null,
+	id int unsigned primary key not null auto_increment,
     name varchar(50) not null
 );
 create table company (
-	id int unsigned primary key not null,
+	id int unsigned primary key not null auto_increment,
     name varchar(50) not null,
     number_employees int unsigned not null
 );
@@ -32,7 +33,7 @@ create table company_industry (
     constraint fk_company_industry_industry foreign key company_industry(industry) references industry(id) on delete cascade on update cascade
 );
 create table element (
-	id int unsigned primary key not null,
+	id int unsigned primary key not null auto_increment,
     title varchar(200) not null,
     year int unsigned not null,
     stock int unsigned not null,
@@ -153,4 +154,4 @@ create table videogame_programmed_by (
     constraint fk_videogame_programmed_by_programmer foreign key videogame_programmed_by(programmer) references person(id) on delete cascade on update cascade
 );
 
-
+delete from country; delete from element; delete from book; delete from book_author; delete from company;

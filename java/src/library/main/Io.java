@@ -49,18 +49,23 @@ public class Io {
 		}
 	}
 	public static List<Library> readLibraries() {
-		File folder = new File("./libraries");
+		File folder = new File("./libraries/");
 		List<Library> libraries = new ArrayList<Library>();
 		for (File fileEntry: folder.listFiles()) {
-			if (!fileEntry.isDirectory()) System.out.println(stripExtension(fileEntry.getName()));	//libraries.add(readLibrary(fileEntry.getName()));
+			if (!fileEntry.isDirectory() && fileEntry != null) libraries.add(readLibrary(fileEntry.getName().trim()));
 		}
-		return null;
+		return libraries;
 	}
 	public static Library readLibrary(String libraryName) {
 		ObjectInputStream ois = null;
 		Library library = null;
 		try	{
-			ois = new ObjectInputStream(new FileInputStream("./libraries/" + libraryName + ".ser"));
+			// checks if the param. has a .ser at the start
+			int index = libraryName.indexOf('.');
+			if (!(index < 0) && libraryName.substring(index, libraryName.length()).equals(".ser"))
+				ois = new ObjectInputStream(new FileInputStream("./libraries/" + libraryName));
+			else
+				ois = new ObjectInputStream(new FileInputStream("./libraries/" + libraryName + ".ser"));
 			library = (Library)ois.readObject();
 		} catch (FileNotFoundException e) {
 			System.err.println("Library \"" + libraryName + "\" not found.");

@@ -1,12 +1,14 @@
 package library.main;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import library.catalogue.Book;
+import library.catalogue.Element;
 import library.catalogue.Magazine;
 import library.catalogue.Movie;
 import library.catalogue.Videogame;
-import library.catalogue.Element;
 import library.data.Company;
 import library.data.Country;
 import library.data.Industry;
@@ -33,16 +35,19 @@ public class MainClass {
 		script.add(new Person(1, "Roger", "Avary"));
 		starring.add(new Person(1, "John", "Travolta"));
 		starring.add(new Person(1, "Uma", "Thurman"));
-		elements.add(new Movie(1, "Pulp Fiction", 1994, subjects, 9, new Country(1, "United States"), new Person(1, "Quentin", "Tarantino"), production, script, starring, 158));
+		//elements.add(new Movie(1, "Pulp Fiction", 1994, subjects, 9, new Country(1, "United States"), new Person(1, "Quentin", "Tarantino"), production, script, starring, 158));
 		
 		List<Subject> subjects2 = new ArrayList<Subject>();
 		subjects2.add(new Subject("Novel"));
-		elements.add(new Book(1, "The Ingenious Nobleman Mister Quixote of La Mancha", 1605, subjects2, 12, new Country(1, "Spain"), "9780805511963", new Person(1, "Miguel", "De Cervantes"), new Company(1, "Tu editorial", industries, 2), 34));
+		List<Person> authors = new ArrayList<Person>();
+		authors.add(new Person(1, "Miguel", "De Cervantes"));
+		authors.add(new Person(1, "Another", "Sample Author"));
+		elements.add(new Book(1, "The Ingenious Nobleman Mister Quixote of La Mancha", 1605, subjects2, 12, new Country(1, "Spain"), "9780805511963", authors, new Company(1, "Tu editorial", industries, 2), 34));
 		
 		List<Subject> subjects3 = new ArrayList<Subject>();
 		subjects3.add(new Subject("News magazine"));
 		subjects3.add(new Subject("Shit"));
-		elements.add(new Magazine(1, "Interviu", 1976, subjects3, 196, new Country(1, "Spain"), "9788485286256", new Person(1, "Antonio", "Asensio Pizarro"), new Company(1, "Grupo Zeta", industries, 69)));
+		//elements.add(new Magazine(1, "Interviu", 1976, subjects3, 196, new Country(1, "Spain"), "9788485286256", new Person(1, "Antonio", "Asensio Pizarro"), new Company(1, "Grupo Zeta", industries, 69)));
 
 		List<Subject> subjects4 = new ArrayList<Subject>();
 		subjects4.add(new Subject(1, "Platformer"));
@@ -64,16 +69,30 @@ public class MainClass {
 		programmers.add(new Person(1, "Toshihiko", "Nakago"));
 		programmers.add(new Person(1, "Kazuaki", "Morita"));
 		
-		elements.add(new Videogame(1, "Super Mario Bros", 1985, subjects4, 34, new Country(1, "Japan"), developers, publishers, directors, producers, designers, programmers));
+		//elements.add(new Videogame(1, "Super Mario Bros", 1985, subjects4, 34, new Country(1, "Japan"), developers, publishers, directors, producers, designers, programmers));
 		
 		Library lib = new Library("Antonio's Library", elements);
 		
+		/*
 		Io.saveLibrary(lib);
 		Element e = new Videogame(1, "Super Mario Bros", 1985, subjects4, 34, new Country(1, "Japan"), developers, publishers, directors, producers, designers, programmers);
 		Io.saveElementToLibrary(e, "Antonio's Library");
 		
-		System.out.println(Io.readLibrary("Antonio's Library"));
-		System.out.println(developers);
+		System.out.println(Io.readLibraries());
+		*/
+		Db db = Db.getInstance("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3307/library", "root", "");
+		Statement st = null;
+		try {
+			if (db.connect()) System.out.println("Connected to localhost:3307/library with success!"); else System.err.println("Error with the connection");
+			db.saveLibraryIntoDatabase(lib);
+			if (db.disconnect()) System.out.println("Disconnected to localhost:3307/library with success!"); else System.err.println("Error with the disconnection");
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} catch(ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		
 	}
 
 }
