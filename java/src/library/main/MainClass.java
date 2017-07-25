@@ -47,7 +47,11 @@ public class MainClass {
 		List<Subject> subjects3 = new ArrayList<Subject>();
 		subjects3.add(new Subject("News magazine"));
 		subjects3.add(new Subject("Shit"));
-		//elements.add(new Magazine(1, "Interviu", 1976, subjects3, 196, new Country(1, "Spain"), "9788485286256", new Person(1, "Antonio", "Asensio Pizarro"), new Company(1, "Grupo Zeta", industries, 69)));
+		List<Person> founders = new ArrayList<Person>();
+		founders.add(new Person(1, "Manolo", "Ortega"));
+		founders.add(new Person(1, "Antonio", "Chavez"));
+		founders.add(new Person(1, "Antonio", "Asensio Pizarro"));
+		elements.add(new Magazine(1, "Interviu", 1976, subjects3, 196, new Country(1, "Spain"), "9788485286256", founders, new Company(1, "Grupo Zeta", industries, 69)));
 
 		List<Subject> subjects4 = new ArrayList<Subject>();
 		subjects4.add(new Subject(1, "Platformer"));

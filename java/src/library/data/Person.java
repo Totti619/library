@@ -33,6 +33,10 @@ public class Person implements Comparable<Person>, Serializable {
 	public void setSurnames(String surnames) {
 		this.surnames = surnames;
 	}
+	
+	public String getFullName() {
+		return getName() + " " + getSurnames();
+	}
 
 	@Override
 	public boolean equals(Object obj) throws ClassCastException, NullPointerException {

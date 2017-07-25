@@ -145,6 +145,14 @@ create table videogame_designed_by (
     constraint fk_videogame_designed_by_videogame foreign key videogame_designed_by(videogame) references videogame(id) on delete cascade on update cascade,
     constraint fk_videogame_designed_by_designer foreign key videogame_designed_by(designer) references person(id) on delete cascade on update cascade
 );
+create table company_industry (
+	company int unsigned not null,
+    industry int unsigned not null,
+    
+    primary key company_industry(company, industry),
+    constraint fk_company_industry_company foreign key company_industry(company) references company(id) on delete cascade on update cascade,
+    constraint fk_company_industry_industry foreign key company_industry(industry) references industry(id) on delete cascade on update cascade
+);
 create table videogame_programmed_by (
 	videogame int unsigned not null,
     programmer int unsigned not null,
@@ -154,4 +162,6 @@ create table videogame_programmed_by (
     constraint fk_videogame_programmed_by_programmer foreign key videogame_programmed_by(programmer) references person(id) on delete cascade on update cascade
 );
 
-delete from country; delete from element; delete from book; delete from book_author; delete from company;
+alter table element add unique(title);
+
+delete from country; delete from element; delete from book; delete from book_author; delete from company; delete from magazine; delete from magazine_founder; delete from industry; delete from company_industry;
