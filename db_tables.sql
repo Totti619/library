@@ -161,7 +161,18 @@ create table videogame_programmed_by (
     constraint fk_videogame_programmed_by_videogame foreign key videogame_programmed_by(videogame) references videogame(id) on delete cascade on update cascade,
     constraint fk_videogame_programmed_by_programmer foreign key videogame_programmed_by(programmer) references person(id) on delete cascade on update cascade
 );
+create table element_subject (
+	element int unsigned not null,
+    subject int unsigned not null,
+    
+    primary key element_subject(element, subject),
+    constraint fk_element_subject_element foreign key element_subject(element) references element(id) on delete cascade on update cascade,
+    constraint fk_element_subject_subject foreign key element_subject(subject) references subject(id) on delete cascade on update cascade
+);
 
-alter table element add unique(title);
+alter table person add unique(name, surnames);
 
-delete from country; delete from element; delete from book; delete from book_author; delete from company; delete from magazine; delete from magazine_founder; delete from industry; delete from company_industry;
+delete from country; delete from element; delete from book; delete from book_author; delete from company;
+delete from magazine; delete from magazine_founder; delete from industry; delete from company_industry; 
+delete from person; delete from movie; delete from movie_produced_by;
+delete from movie_scripted_by; delete from movie_starred_by; delete from subject; delete from element_subject;

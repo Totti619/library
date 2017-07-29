@@ -35,7 +35,7 @@ public class MainClass {
 		script.add(new Person(1, "Roger", "Avary"));
 		starring.add(new Person(1, "John", "Travolta"));
 		starring.add(new Person(1, "Uma", "Thurman"));
-		//elements.add(new Movie(1, "Pulp Fiction", 1994, subjects, 9, new Country(1, "United States"), new Person(1, "Quentin", "Tarantino"), production, script, starring, 158));
+		elements.add(new Movie(1, "Pulp Fiction", 1994, subjects, 9, new Country(1, "United States"), new Person(1, "Quentin", "Tarantino"), production, script, starring, 158));
 		
 		List<Subject> subjects2 = new ArrayList<Subject>();
 		subjects2.add(new Subject("Novel"));
