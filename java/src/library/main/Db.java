@@ -362,24 +362,153 @@ public class Db {
 			}
 		}
 		if (element instanceof Videogame) {
-			saveVideogame((Videogame)element, idElement);
+			saveVideogame(st, (Videogame)element, idElement);
 		}
 		rs.close(); st.close();
 	}
-	private void saveVideogame(Videogame videogame, int idElement) throws SQLException {
-		/*
+	private void saveVideogame(Statement st, Videogame videogame, int idElement) throws SQLException {
 		String queryVideogame = "insert into videogame(id) values(" + idElement + ")";
-		
-		int idVideogame;
+	
 		List<Company> developingCompanies = videogame.getDevelopingCompanies();
 		List<Company> publishingCompanies = videogame.getPublishingCompanies();
 		List<Person> directors = videogame.getDirectors();
 		List<Person> producers = videogame.getProducers();
 		List<Person> designers = videogame.getDesigners();
 		List<Person> programmers = videogame.getProgrammers();
-		*/
-		
-		// TODO code to save videogames into DB
+		for (Iterator<Company> i = developingCompanies.iterator(); i.hasNext();) {
+			Company company = i.next();
+			int idDevelopingCompany = saveCompany(company);
+			String queryVideogameDevelopingCompany = "insert into videogame_developed_by values(" + idElement + ", " + idDevelopingCompany + ")";
+			try {
+				if (st != null) st.executeUpdate(queryVideogameDevelopingCompany);
+			} catch (SQLIntegrityConstraintViolationException e) {
+				System.err.println("The program won't insert the relation between the videogame \"" + videogame.getTitle() + "\" and the developing company \"" + company.getName() + "\" because it does already exist in this DB.");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		for (Iterator<Company> i = publishingCompanies.iterator(); i.hasNext();) {
+			Company company = i.next();
+			int idPublishingCompany = saveCompany(company);
+			String queryVideogamePublishingCompany = "insert into videogame_published_by values(" + idElement + ", " + idPublishingCompany + ")";
+			try {
+				if (st != null) st.executeUpdate(queryVideogamePublishingCompany);
+			} catch (SQLIntegrityConstraintViolationException e) {
+				System.err.println("The program won't insert the relation between the videogame \"" + videogame.getTitle() + "\" and the publishing company \"" + company.getName() + "\" because it does already exist in this DB.");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		for (Iterator<Person> i = directors.iterator(); i.hasNext();) {
+			Person person = i.next();
+			int idDirector = savePerson(person);
+			String queryVideogameDirector = "insert into videogame_directed_by values(" + idElement + ", " + idDirector + ")";
+			try {
+				if (st != null) st.executeUpdate(queryVideogameDirector);
+			} catch (SQLIntegrityConstraintViolationException e) {
+				System.err.println("The program won't insert the relation between the videogame \"" + videogame.getTitle() + "\" and the director \"" + person.getFullName() + "\" because it does already exist in this DB.");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		// TODO saveProducers(producers, idElement);
+		// TODO saveDesigners(designers, idElement);
+		// TODO saveProgrammers(programmers, idElement);
+	}
+	private int savePerson(Person person) {
+		ResultSet rs = null; Statement st = null;
+		int idPerson = 0;
+		try {
+			st = statement();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		String queryPerson = "insert into person(name, surnames) values('" + person.getName() + "', '" + person.getSurnames() + "')";
+		try {
+			if (st != null) st.executeUpdate(queryPerson);
+			String queryIdPerson = "select id from person where name = '" + person.getName() + "' and surnames = '" + person.getSurnames() + "'";
+			rs = st.executeQuery(queryIdPerson);
+			rs.first();
+			idPerson = rs.getInt(1);
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.err.println("The program won't insert the person \"" + person.getFullName() + "\" because it does already exist in this DB.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return idPerson;
+	}
+	private int saveCompany(Company company) {
+		ResultSet rs = null; Statement st = null;
+		int idCompany = 0;
+		try {
+			st = statement();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		String queryCompany = "insert into company(name, number_employees) values('" + company.getName() + "', " + company.getNumberEmployees() + ")"; 
+		try {
+			if (st != null) st.executeUpdate(queryCompany);
+			String queryIdCompany = "select id from company where name = '" + company.getName() + "'";
+			rs = st.executeQuery(queryIdCompany);
+			rs.first();
+			idCompany = rs.getInt(1);
+			List<Industry> industries = company.getIndustries();
+			for (Iterator<Industry> i = industries.iterator(); i.hasNext();) {
+				Industry industry = i.next();
+				int idIndustry = saveIndustry(industry);
+				saveCompanyIndustry(company, industry, idCompany, idIndustry);
+			}
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.err.println("The program won't insert the company \"" + company.getName() + "\" because it does already exist in this DB.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return idCompany;
+	}
+	private void saveCompanyIndustry(Company company, Industry industry, int idCompany, int idIndustry) {
+		Statement st = null;
+		try {
+			st = statement();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		String queryCompanyIndustry = "insert into company_industry values(" + idCompany + ", " + idIndustry + ")";
+		try {
+			st.executeUpdate(queryCompanyIndustry);
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.err.println("The program won't insert the relation between the company \"" + company.getName() + "\" and the industry \"" + industry.getName() + "\" because it does already exist in this DB.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	private int saveIndustry(Industry industry) {
+		ResultSet rs = null; Statement st = null;
+		try {
+			st = statement();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		String queryIndustry = "insert into industry(name) values('" + industry.getName() + "')";
+		try {
+			if (st != null) st.executeUpdate(queryIndustry);
+			String queryIdIndustry = "select id from company where name = '" + industry.getName() + "'";
+			rs = st.executeQuery(queryIdIndustry);
+			rs.first();
+			return rs.getInt(1);
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.err.println("The program won't insert the industry \"" + industry.getName() + "\" because it does already exist in this DB.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
 	}
 	private void saveSubject(Statement st, int idElement, Element element, Subject subject) throws SQLException {
 		ResultSet rs;
