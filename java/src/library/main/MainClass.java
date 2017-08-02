@@ -73,7 +73,28 @@ public class MainClass {
 		programmers.add(new Person(1, "Toshihiko", "Nakago"));
 		programmers.add(new Person(1, "Kazuaki", "Morita"));
 		
-		//elements.add(new Videogame(1, "Super Mario Bros", 1985, subjects4, 34, new Country(1, "Japan"), developers, publishers, directors, producers, designers, programmers));
+		elements.add(new Videogame(1, "Super Mario Bros", 1985, subjects4, 34, new Country(1, "Japan"), developers, publishers, directors, producers, designers, programmers));
+		
+		List<Subject> subjects5 = new ArrayList<Subject>();
+		subjects5.add(new Subject(1, "Action RPG"));
+		subjects5.add(new Subject(1, "Open world"));
+		List<Company> developers1 = new ArrayList<Company>();
+		List<Company> publishers1 = new ArrayList<Company>();
+		List<Person> directors1 = new ArrayList<Person>();
+		List<Person> producers1 = new ArrayList<Person>();
+		List<Person> designers1 = new ArrayList<Person>();
+		List<Person> programmers1 = new ArrayList<Person>();
+		
+		developers1.add(new Company(1, "Bethesda Game Studios", industries, 1));
+		publishers1.add(new Company(1, "Bethesda Softworks", industries, 1));
+		publishers1.add(new Company(1, "Steam", industries, 1));
+		directors1.add(new Person(1, "Todd", "Howard"));
+		producers1.add(new Person(1, "Craig", "Laffety"));
+		designers1.add(new Person(1, "Bruce", "Nesmith"));
+		designers1.add(new Person(1, "Kurt", "Kuhlmann"));
+		programmers1.add(new Person(1, "Guy", "Carver"));
+		
+		elements.add(new Videogame(1, "The Elder Scrolls V: Skyrim", 2011, subjects5, 999, new Country(1, "United States"), developers1, publishers1, directors1, producers1, designers1, programmers1));
 		
 		Library lib = new Library("Antonio's Library", elements);
 		
@@ -84,8 +105,7 @@ public class MainClass {
 		
 		System.out.println(Io.readLibraries());
 		*/
-		Db db = Db.getInstance("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3307/library", "root", "");
-		Statement st = null;
+		Db db = Db.getInstance("com.mysql.jdbc.Driver", "localhost", (short)3307, "root", "");
 		try {
 			if (db.connect()) System.out.println("Connected to localhost:3307/library with success!"); else System.err.println("Error with the connection");
 			db.saveLibraryIntoDatabase(lib);

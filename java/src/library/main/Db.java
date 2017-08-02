@@ -20,7 +20,7 @@ import library.data.Industry;
 import library.data.Person;
 import library.data.Subject;
 
-
+// TODO refactor this whole s***
 
 public class Db {
 	private static Db instance = null;
@@ -36,6 +36,21 @@ public class Db {
 	public static Db getInstance(String driver, String url, String user, String pass) {
 		if (instance == null) instance = new Db(driver, url, user, pass);
 		return instance;
+	}
+	public static Db getInstance(String driver, String host, short port, String user, String pass) {
+		//Db db = Db.getInstance("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3307/library", "root", "");
+		
+		StringBuffer url = new StringBuffer();
+		switch(driver) {
+			case "com.mysql.jdbc.Driver":
+				url.append("jdbc:mysql://");
+				url.append(host + ":" + port + "/library");
+				break;
+			default:
+				System.err.println("The driver isn't correct, hence the program won't be able to create a DB instance.");
+				return null;
+		}
+		return getInstance(driver, url.toString(), user, pass);
 	}
 	
 	public String getDriver() {
@@ -364,58 +379,99 @@ public class Db {
 		if (element instanceof Videogame) {
 			saveVideogame(st, (Videogame)element, idElement);
 		}
-		rs.close(); st.close();
+		if (rs != null && !rs.isClosed()) rs.close(); 
+		if (st != null && !st.isClosed()) st.close();
 	}
 	private void saveVideogame(Statement st, Videogame videogame, int idElement) throws SQLException {
 		String queryVideogame = "insert into videogame(id) values(" + idElement + ")";
-	
-		List<Company> developingCompanies = videogame.getDevelopingCompanies();
-		List<Company> publishingCompanies = videogame.getPublishingCompanies();
-		List<Person> directors = videogame.getDirectors();
-		List<Person> producers = videogame.getProducers();
-		List<Person> designers = videogame.getDesigners();
-		List<Person> programmers = videogame.getProgrammers();
-		for (Iterator<Company> i = developingCompanies.iterator(); i.hasNext();) {
-			Company company = i.next();
-			int idDevelopingCompany = saveCompany(company);
-			String queryVideogameDevelopingCompany = "insert into videogame_developed_by values(" + idElement + ", " + idDevelopingCompany + ")";
-			try {
-				if (st != null) st.executeUpdate(queryVideogameDevelopingCompany);
-			} catch (SQLIntegrityConstraintViolationException e) {
-				System.err.println("The program won't insert the relation between the videogame \"" + videogame.getTitle() + "\" and the developing company \"" + company.getName() + "\" because it does already exist in this DB.");
-			} catch (SQLException e) {
-				e.printStackTrace();
+		try {
+			if (st != null) st.executeUpdate(queryVideogame);
+			List<Company> developingCompanies = videogame.getDevelopingCompanies();
+			List<Company> publishingCompanies = videogame.getPublishingCompanies();
+			List<Person> directors = videogame.getDirectors();
+			List<Person> producers = videogame.getProducers();
+			List<Person> designers = videogame.getDesigners();
+			List<Person> programmers = videogame.getProgrammers();
+			for (Iterator<Company> i = developingCompanies.iterator(); i.hasNext();) {
+				Company company = i.next();
+				int idDevelopingCompany = saveCompany(company);
+				String queryVideogameDevelopingCompany = "insert into videogame_developed_by values(" + idElement + ", " + idDevelopingCompany + ")";
+				try {
+					if (st != null) st.executeUpdate(queryVideogameDevelopingCompany);
+				} catch (SQLIntegrityConstraintViolationException e) {
+					System.err.println("The program won't insert the relation between the videogame \"" + videogame.getTitle() + "\" and the developing company \"" + company.getName() + "\" because it does already exist in this DB.");
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
-		}
-		for (Iterator<Company> i = publishingCompanies.iterator(); i.hasNext();) {
-			Company company = i.next();
-			int idPublishingCompany = saveCompany(company);
-			String queryVideogamePublishingCompany = "insert into videogame_published_by values(" + idElement + ", " + idPublishingCompany + ")";
-			try {
-				if (st != null) st.executeUpdate(queryVideogamePublishingCompany);
-			} catch (SQLIntegrityConstraintViolationException e) {
-				System.err.println("The program won't insert the relation between the videogame \"" + videogame.getTitle() + "\" and the publishing company \"" + company.getName() + "\" because it does already exist in this DB.");
-			} catch (SQLException e) {
-				e.printStackTrace();
+			for (Iterator<Company> i = publishingCompanies.iterator(); i.hasNext();) {
+				Company company = i.next();
+				int idPublishingCompany = saveCompany(company);
+				String queryVideogamePublishingCompany = "insert into videogame_published_by values(" + idElement + ", " + idPublishingCompany + ")";
+				try {
+					if (st != null) st.executeUpdate(queryVideogamePublishingCompany);
+				} catch (SQLIntegrityConstraintViolationException e) {
+					System.err.println("The program won't insert the relation between the videogame \"" + videogame.getTitle() + "\" and the publishing company \"" + company.getName() + "\" because it does already exist in this DB.");
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
-		}
-		for (Iterator<Person> i = directors.iterator(); i.hasNext();) {
-			Person person = i.next();
-			int idDirector = savePerson(person);
-			String queryVideogameDirector = "insert into videogame_directed_by values(" + idElement + ", " + idDirector + ")";
-			try {
-				if (st != null) st.executeUpdate(queryVideogameDirector);
-			} catch (SQLIntegrityConstraintViolationException e) {
-				System.err.println("The program won't insert the relation between the videogame \"" + videogame.getTitle() + "\" and the director \"" + person.getFullName() + "\" because it does already exist in this DB.");
-			} catch (SQLException e) {
-				e.printStackTrace();
+			for (Iterator<Person> i = directors.iterator(); i.hasNext();) {
+				Person person = i.next();
+				int idDirector = savePerson(person);
+				String queryVideogameDirector = "insert into videogame_directed_by values(" + idElement + ", " + idDirector + ")";
+				try {
+					if (st != null) st.executeUpdate(queryVideogameDirector);
+				} catch (SQLIntegrityConstraintViolationException e) {
+					System.err.println("The program won't insert the relation between the videogame \"" + videogame.getTitle() + "\" and the director \"" + person.getFullName() + "\" because it does already exist in this DB.");
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
+			for (Iterator<Person> i = producers.iterator(); i.hasNext();) {
+				Person person = i.next();
+				int idProducer = savePerson(person);
+				String queryVideogameProducer = "insert into videogame_produced_by values(" + idElement + ", " + idProducer + ")";
+				try {
+					if (st != null) st.executeUpdate(queryVideogameProducer);
+				} catch (SQLIntegrityConstraintViolationException e) {
+					System.err.println("The program won't insert the relation between the videogame \"" + videogame.getTitle() + "\" and the producer \"" + person.getFullName() + "\" because it does already exist in this DB.");
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			for (Iterator<Person> i = designers.iterator(); i.hasNext();) {
+				Person person = i.next();
+				int idDesigner = savePerson(person);
+				String queryVideogameDesigner = "insert into videogame_designed_by values(" + idElement + ", " + idDesigner + ")";
+				try {
+					if (st != null) st.executeUpdate(queryVideogameDesigner);
+				} catch (SQLIntegrityConstraintViolationException e) {
+					System.err.println("The program won't insert the relation between the videogame \"" + videogame.getTitle() + "\" and the designer \"" + person.getFullName() + "\" because it does already exist in this DB.");
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			for (Iterator<Person> i = programmers.iterator(); i.hasNext();) {
+				Person person = i.next();
+				int idProgrammer = savePerson(person);
+				String queryVideogameProgrammer = "insert into videogame_programmed_by values(" + idElement + ", " + idProgrammer + ")";
+				try {
+					if (st != null) st.executeUpdate(queryVideogameProgrammer);
+				} catch (SQLIntegrityConstraintViolationException e) {
+					System.err.println("The program won't insert the relation between the videogame \"" + videogame.getTitle() + "\" and the programmer \"" + person.getFullName() + "\" because it does already exist in this DB.");
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.err.println("The program won't insert the videogame \"" + videogame.getTitle() + "\" because it does already exist in this DB.");
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		// TODO saveProducers(producers, idElement);
-		// TODO saveDesigners(designers, idElement);
-		// TODO saveProgrammers(programmers, idElement);
+		
 	}
-	private int savePerson(Person person) {
+	public int savePerson(Person person) {
 		ResultSet rs = null; Statement st = null;
 		int idPerson = 0;
 		try {
@@ -428,12 +484,16 @@ public class Db {
 		String queryPerson = "insert into person(name, surnames) values('" + person.getName() + "', '" + person.getSurnames() + "')";
 		try {
 			if (st != null) st.executeUpdate(queryPerson);
+		} catch (SQLIntegrityConstraintViolationException e) {
+			System.err.println("The program won't insert the person \"" + person.getFullName() + "\" because it does already exist in this DB.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		try {
 			String queryIdPerson = "select id from person where name = '" + person.getName() + "' and surnames = '" + person.getSurnames() + "'";
 			rs = st.executeQuery(queryIdPerson);
 			rs.first();
 			idPerson = rs.getInt(1);
-		} catch (SQLIntegrityConstraintViolationException e) {
-			System.err.println("The program won't insert the person \"" + person.getFullName() + "\" because it does already exist in this DB.");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

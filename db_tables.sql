@@ -1,7 +1,10 @@
+/*
 drop database library;
 create database library;
+*/
 use library;
 
+/*
 create table country (
 	id int unsigned primary key not null auto_increment,
     name varchar(50) not null
@@ -176,6 +179,7 @@ create table element_subject (
     constraint fk_element_subject_subject foreign key element_subject(subject) references subject(id) on delete cascade on update cascade
 );
 
+
 alter table person add unique(name, surnames);
 
 drop table videogame_designed_by;
@@ -185,7 +189,25 @@ drop table videogame_programmed_by;
 drop table videogame_published_by;
 drop table videogame;
 
+
 delete from country; delete from element; delete from book; delete from book_author; delete from company;
 delete from magazine; delete from magazine_founder; delete from industry; delete from company_industry; 
 delete from person; delete from movie; delete from movie_produced_by;
 delete from movie_scripted_by; delete from movie_starred_by; delete from subject; delete from element_subject;
+delete from videogame; delete from videogame_designed_by; delete from videogame_developed_by; delete from videogame_directed_by; delete from videogame_produced_by; delete from videogame_programmed_by; delete from videogame_published_by;
+*/
+
+/* -------- TEST QUERIES --------- */
+
+-- get the amount of designers working of every videogame
+select element.id, title, count(*) as number_designers
+from element
+join videogame
+on element.id = videogame.id
+join videogame_designed_by
+on videogame_designed_by.videogame = videogame.id
+join person
+on videogame_designed_by.designer = person.id
+group by element.id
+having count(*)
+; 
