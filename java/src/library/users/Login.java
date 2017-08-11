@@ -21,10 +21,12 @@ public class Login {
     public Login(String user, String pass) {
         try {
             db.connect();
-            setUser(db.selectUser(user, pass));
+            this.user = db.selectUser(user, pass);
             db.disconnect();
         } catch (SQLException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
 }
