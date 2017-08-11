@@ -19,6 +19,7 @@ import library.data.Country;
 import library.data.Industry;
 import library.data.Person;
 import library.data.Subject;
+import library.users.User;
 
 // TODO refactor this whole s***
 
@@ -71,7 +72,11 @@ public class Db {
 	public void setConnection(Connection connection) {
 		this.connection = connection;
 	}
-	
+	public User selectUser(String name, String pass) {
+            User user = new User(name, pass);
+            String queryUser = "";
+            return user;
+        }
 	public boolean connect() throws SQLException {
 		setConnection(DriverManager.getConnection(getUrl(), getUser(), getPass()));
 		return !getConnection().isClosed();
