@@ -9,13 +9,11 @@ package library.users;
  *
  * @author Master
  */
-public class UserNotFoundException extends Exception {
-    public UserNotFoundException(){}    
-    
+public class WrongPasswordException extends Exception {
+    WrongPasswordException(){}
     
     @Override
     public void printStackTrace() {
         super.printStackTrace();
     }
-    
 }

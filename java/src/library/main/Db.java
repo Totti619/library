@@ -73,8 +73,8 @@ public class Db {
 		this.connection = connection;
 	}
 	public User selectUser(String name, String pass) {
-            User user = new User(name, pass);
-            String queryUser = "";
+            User user = null;
+            String queryUser = "select ";
             return user;
         }
 	public boolean connect() throws SQLException {
