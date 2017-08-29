@@ -11,8 +11,7 @@ package library.users;
  */
 public class UserNotFoundException extends Exception {
     public UserNotFoundException(){}    
-    
-    
+    //sdf
     @Override
     public void printStackTrace() {
         super.printStackTrace();
